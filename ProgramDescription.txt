@@ -1,0 +1,82 @@
+syntax: 
+[IMPORTANT NOTE: MAKE SURE THAT YOU HAVE THE FILE NumericalMethod.py in the same directiory]
+import NumericalMethod
+import numpy as np
+import matplotlib.pyplot as plt
+
+==========================================================================
+[GAUSS-SEIDLE EXAMPLE USE]
+M = np.array([
+    [10, 2, 3, 4],
+    [8, 9, 1, 2],
+    [-1, -5, 2, 2.1],
+    [4, 5, 1, 7]
+]) // must be an 2-d array with (n, n) shape
+
+f = np.array([100, 0, 300, 90]) // must be an array with (n,) shape
+
+x0 = np.array([100, 100, 100, 100], dtype=float) // must be an array with (n, ) shape
+
+[IMPORTANT NOTE: MAKE SURE THAT YOU DETERMINE THE TYPE AS FLOAT]
+
+GS_Model = GaussSeidelMethod(Matrix=M, Res=f)
+GS_print(Model.root)
+GS_print(Model.error)
+GS_Model.do(itteration=10, tol=0.0001, disp=2)
+GS_Model.plot_root()
+GS_Model.plot_error()
+
+==========================================================================
+[NEWTON-RAPHSON EXAMPLE USE]
+def JacobiMatrix(X):
+    J = np.array([
+        [2*X[0] - X[1], -X[0], 1],
+        [2 + X[2], -1, X[0]],
+        [np.cos(X[0]), -1, 1]
+    ], dtype=float)
+    return J // must be an 2-d array with (n, n) shape
+
+def F(X):
+    f = np.array([
+        X[0]**2 - X[0]*X[1] + X[2] - 1.94, 
+        2*X[0] + X[0]*X[2] - X[1] - 4.65, 
+        np.sin(X[0]) + X[2] - X[1] - 2.10
+    ], dtype=float)
+    return f // must be an array with (n,) shape
+
+x0 = np.random.rand(3) // must be an array with (n,) shape
+
+NR_Model = NewontRaphson(Matrix_Jacobi=JacobiMatrix, function=F)
+print(NR_Model.root)
+print(NR_Model.error)
+NR_Model.do(x=x0, tol=0.00001, disp=4, itteration=30)
+NR_Model.plot_root()
+NR_Model.plot_error()
+
+==========================================================================
+[SECANT EXAMPLE USE]
+# fungsi dari J_secant sudah disiapkan terlebih dahulu
+def J_Secant(X, h=0.01):
+    j = numpy.array([
+        [2*X[0] - X[1] + h, -X[1], 1],
+        [2 + X[2], -1, X[0]],
+        [(numpy.sin(X[0]+h) - numpy.sin(X[0])) / h, -1, 1]
+    ], dtype=float)
+    return j // must be an 2-d array with (n, n) shape
+
+def F(X):
+    f = np.array([
+        X[0]**2 - X[0]*X[1] + X[2] - 1.94, 
+        2*X[0] + X[0]*X[2] - X[1] - 4.65, 
+        np.sin(X[0]) + X[2] - X[1] - 2.10
+    ], dtype=float)
+    return f // must be an array with (n,) shape
+
+x0 = np.random.rand(3) // must be an array with (n,) shape
+
+SC_Model = SectonMethod(Matrix_Jacobi=J_Secant, function=F)
+print(SC_Model.root)
+print(SC_Model.error)
+SC_Model.do(x=x0, tol=0.00001, disp=4, itteration=30)
+SC_Model.plot_root()
+SC_Model.plot_error()
